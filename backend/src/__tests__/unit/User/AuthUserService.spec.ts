@@ -34,19 +34,19 @@ describe("Auth", () => {
   });
 
   it("should not be able to login with not registered email", async () => {
-    try {
-      await AuthUserService({
-        email: faker.internet.email(),
-        password: faker.internet.password()
-      });
-    } catch (err) {
-      expect(err).toBeInstanceOf(AppError);
-      expect(err.statusCode).toBe(401);
-      expect(err.message).toBe("ERR_INVALID_CREDENTIALS");
-    }
+    const promise = AuthUserService({
+      email: faker.internet.email(),
+      password: faker.internet.password()
+    });
+
+    await expect(promise).rejects.toBeInstanceOf(AppError);
+    await expect(promise).rejects.toMatchObject({
+      statusCode: 401,
+      message: "ERR_INVALID_CREDENTIALS"
+    });
   });
 
-  it("should not be able to login with incorret password", async () => {
+  it("should not be able to login with incorrect password", async () => {
     await CreateUserService({
       name: faker.name.findName(),
       email: "mail@test.com",
@@ -54,15 +54,15 @@ describe("Auth", () => {
       tenantId: 1
     });
 
-    try {
-      await AuthUserService({
-        email: "mail@test.com",
-        password: faker.internet.password()
-      });
-    } catch (err) {
-      expect(err).toBeInstanceOf(AppError);
-      expect(err.statusCode).toBe(401);
-      expect(err.message).toBe("ERR_INVALID_CREDENTIALS");
-    }
+    const promise = AuthUserService({
+      email: "mail@test.com",
+      password: faker.internet.password()
+    });
+
+    await expect(promise).rejects.toBeInstanceOf(AppError);
+    await expect(promise).rejects.toMatchObject({
+      statusCode: 401,
+      message: "ERR_INVALID_CREDENTIALS"
+    });
   });
 });
