@@ -21,7 +21,7 @@ const DeleteUserService = async (
   });
 
   if (userOpenTickets.length > 0) {
-    UpdateDeletedUserOpenTicketsStatus(
+    await UpdateDeletedUserOpenTicketsStatus(
       userOpenTickets,
       tenantId,
       userIdRequest

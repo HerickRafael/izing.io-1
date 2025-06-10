@@ -7,30 +7,32 @@ const UpdateDeletedUserOpenTicketsStatus = async (
   tenantId: string | number,
   userIdRequest: string | number
 ): Promise<void> => {
-  tickets.forEach(async t => {
-    const ticketId = t.id.toString();
+  await Promise.all(
+    tickets.map(async t => {
+      const ticketId = t.id.toString();
 
-    await UpdateTicketService({
-      ticketData: { status: "pending", tenantId },
-      ticketId,
-      userIdRequest
-    });
+      await UpdateTicketService({
+        ticketData: { status: "pending", tenantId },
+        ticketId,
+        userIdRequest
+      });
 
-    // const io = getIO();
-    // if (ticket.status !== oldStatus) {
-    //   io.to(`${tenantId}-${oldStatus}`).emit(`${tenantId}-ticket`, {
-    //     action: "delete",
-    //     ticketId: ticket.id
-    //   });
-    // }
+      // const io = getIO();
+      // if (ticket.status !== oldStatus) {
+      //   io.to(`${tenantId}-${oldStatus}`).emit(`${tenantId}-ticket`, {
+      //     action: "delete",
+      //     ticketId: ticket.id
+      //   });
+      // }
 
-    // io.to(`${tenantId}-${ticket.status}`)
-    //   .to(`${tenantId}-${ticketId}`)
-    //   .emit(`${tenantId}-ticket`, {
-    //     action: "updateStatus",
-    //     ticket
-    //   });
-  });
+      // io.to(`${tenantId}-${ticket.status}`)
+      //   .to(`${tenantId}-${ticketId}`)
+      //   .emit(`${tenantId}-ticket`, {
+      //     action: "updateStatus",
+      //     ticket
+      //   });
+    })
+  );
 };
 
 export default UpdateDeletedUserOpenTicketsStatus;
